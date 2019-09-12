@@ -131,7 +131,7 @@ main:
 
 		reset:
 			xor cx, cx
-
+			jmp menu
 		menu:
 			
 			call getchar
@@ -181,9 +181,14 @@ main:
 
 		jmp menu
 		instructions:
-		
+			call getchar
+			cmp al, 13
+			je game
+			jmp instructions
 		game:
-	
+			call getchar
+			call putchar
+			jmp game
 
 	end_finite_state_machine:
 	
