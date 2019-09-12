@@ -6,7 +6,7 @@ instruct db "Instructions",0
 marker db ">",0
 choice dw 0
 
-;batata times 9000 db 0
+batata times 3 db 0
 
 getchar:
 	mov ah, 0x0
@@ -130,33 +130,52 @@ main:
 	finite_state_machine:
 
 		reset:
-		
+			xor cx, cx
 
 		menu:
-			call video
-			;mov cx, [choice]
-			call getchar
 			
-			cmp al, 'W'
+			call getchar
+			;call putchar
+			cmp al, 's'
 			je up_one_choice
-			cmp al, 'S'
+			cmp al, 'w'
 			je down_one_choice
+			cmp al, 13
+			je choose
+			jmp menu
 			
 			
 			up_one_choice:
-				cmp al,2
-				;jlt up_one
-				up_one:
+				cmp cl,2
+				jl up_one
 				jmp menu
-					
+				up_one:
+					inc cx
+					jmp menu
+						
 			down_one_choice:
+				cmp cl, 1
+				jg down_one
+				jmp menu
+				down_one:
+					dec cx
+					jmp menu 
 			
-		
-			choice_menu:
-			
+
+			choose:
+				cmp cl, 2
+				je choice_instructions
+				jmp choice_game
+			choice_instructions:
+				mov si, instruct
+				mov di , instruct
+				call printf
+				jmp instructions
 			choice_game:
-
-
+				mov si, start
+				mov di , start
+				call printf
+				jmp game
 			
 		
 
@@ -164,7 +183,7 @@ main:
 		instructions:
 		
 		game:
-		
+	
 
 	end_finite_state_machine:
 	
@@ -175,5 +194,5 @@ main:
 
 end:
 	jmp $
-times 510-($-$$) db 0
+times 10000-($-$$) db 0
 dw 0xaa55

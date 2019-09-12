@@ -1,6 +1,6 @@
 bootdisk=disk.img
 blocksize=512
-disksize=1000
+disksize=100
 
 boot1=boot1
 
@@ -15,7 +15,7 @@ menupos=2
 menusize=4
 
 # preencha esses valores para rodar o kernel
-kernel=kernel
+kernel=game
 kernelpos=6
 kernelsize=8
 
