@@ -141,8 +141,9 @@ start_game:
 
 				player_one_chooses_rock:
 					mov si, cards_player_one
-					lodsb
+					
 					cmp byte[si], 0
+					;lodsb
 					;add al, 48
 					;call putchar
 					jne player_one_can_choose_rock
@@ -164,20 +165,21 @@ start_game:
 					mov di, cards_player_one
 					inc si
 					inc di
-					lodsb
-					cmp al, 0
-					add al, 48
-					call putchar
+					;lodsb
+					cmp byte[si], 0
+					;add al, 48
+					;call putchar
 					jne player_one_can_choose_paper
+					je player_one
 					jmp player_one
 					player_one_can_choose_paper:
 						mov si, cards_player_one
 						mov di, cards_player_one
 						inc si
 						inc di
-						lodsb
-						dec al
-						stosb
+						;lodsb
+						dec byte[di]
+						;stosb
 						mov di, choice_player_one
 						mov al, 'P' 
 						call putchar
