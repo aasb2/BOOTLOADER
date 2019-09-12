@@ -4,8 +4,11 @@ jmp 0x0000:main
 start db "Start",0
 instruct db "Instructions",0
 marker db ">",0
-choice dw 0
-
+choice db 0
+choice_player_one db 0
+choice_player_two db 0
+cards_player_one times 3 db 3
+cards_player_two times 3 db 3
 batata times 3 db 0
 
 getchar:
@@ -121,6 +124,95 @@ reset_registers:
 	mov di, ax
 ret
 
+
+start_game:
+	pusha
+		
+		begin:
+			player_one:
+				call getchar
+				cmp al, 'a'
+				je player_one_chooses_rock
+				cmp al, 's'
+				je player_one_chooses_paper
+				cmp al, 'd'
+				je player_one_chooses_scisors
+				jmp player_one
+
+				player_one_chooses_rock:
+					mov si, cards_player_one
+					lodsb
+					cmp byte[si], 0
+					;add al, 48
+					;call putchar
+					jne player_one_can_choose_rock
+					je player_one
+					jmp player_one
+					player_one_can_choose_rock:
+						mov si, cards_player_one
+						mov di, cards_player_one
+						lodsb
+						dec byte[di]
+						stosb
+						mov di, choice_player_one
+						mov al, 'R'
+						call putchar
+						stosb
+						jmp end_player_one
+				player_one_chooses_paper:
+					mov si, cards_player_one
+					mov di, cards_player_one
+					inc si
+					inc di
+					lodsb
+					cmp al, 0
+					add al, 48
+					call putchar
+					jne player_one_can_choose_paper
+					jmp player_one
+					player_one_can_choose_paper:
+						mov si, cards_player_one
+						mov di, cards_player_one
+						inc si
+						inc di
+						lodsb
+						dec al
+						stosb
+						mov di, choice_player_one
+						mov al, 'P' 
+						call putchar
+						stosb
+						jmp end_player_one
+							
+				player_one_chooses_scisors:
+						mov si, cards_player_one
+						mov di, cards_player_one
+						add si, 2
+						add di, 2
+						lodsb
+						cmp al, 0
+						jne player_one_can_choose_scisors
+						
+						player_one_can_choose_scisors
+						
+			end_player_one:
+				
+
+			player_two:
+			end_player_two:
+			decision:
+			end_decision:
+			jmp begin
+		end:
+	
+end_game:
+	popa
+ret
+
+
+
+
+
 main:
 
 	call reset_registers
@@ -175,6 +267,7 @@ main:
 				mov si, start
 				mov di , start
 				call printf
+				call start_game
 				jmp game
 			
 		
@@ -188,7 +281,7 @@ main:
 		game:
 			call getchar
 			call putchar
-			jmp game
+			jmp start_game
 
 	end_finite_state_machine:
 	
@@ -197,7 +290,7 @@ main:
 
 
 
-end:
+end_program:
 	jmp $
 times 10000-($-$$) db 0
 dw 0xaa55
