@@ -1,6 +1,6 @@
 bootdisk=disk.img
 blocksize=512
-disksize=100
+disksize=50
 
 boot1=boot1
 

@@ -1,9 +1,12 @@
 ;ROCK PAPER SCISORS
 org 0x7E00
-jmp 0x0000:main
+;jmp 0x0000:main
+jmp main
+
 start db "Start",0
 instruct db "Instructions",0
 marker db ">",0
+rodada db 0
 choice db 0
 choice_player_one db 0
 choice_player_two db 0
@@ -11,7 +14,7 @@ pontuation_player_one db 0
 pontuation_player_two db 0
 cards_player_one times 3 db 3
 cards_player_two times 3 db 3
-batata times 3 db 0
+;batata times 3 db 0
 
 player_one_print db "PLAYER 1",0
 player_two_print db "PLAYER 2",0
@@ -87,6 +90,7 @@ ret
 
 printf:
 	pusha
+	;call video
 	xor dx, dx
 	print_loop:
 		lodsb
@@ -97,6 +101,22 @@ printf:
 		jmp print_loop
 	end_print:
 		call endl
+		popa
+	ret
+
+printe:
+	pusha
+	;call video
+	xor dx, dx
+	printe_loop:
+		lodsb
+		cmp al,0
+		je end_printe
+		inc dx
+		call putchar
+		jmp printe_loop
+	end_printe:
+		;call endl
 		popa
 	ret
 video:
@@ -135,6 +155,153 @@ reset_registers:
 ret
 
 
+limpaTela:
+	pusha
+;; Limpa a tela dos caracteres colocados pela BIOS
+	; Set the cursor to top left-most corner of screen
+	mov dx, 0 
+    mov bh, 0      
+    mov ah, 0x2
+    int 0x10
+
+    ; print 2000 blanck chars to clean  
+    mov cx, 2000 
+    mov bh, 0
+    mov al, 0x20 ; blank char
+    mov ah, 0x9
+    int 0x10
+    
+    ;Reset cursor to top left-most corner of screen
+    mov dx, 0 
+    mov bh, 0      
+    mov ah, 0x2
+    int 0x10
+	popa
+ret
+
+limpe: 
+	pusha
+	mov dx, 0 
+    mov bh, 0      
+    mov ah, 0x2
+    int 0x10
+
+	mov cx, 2000 
+    mov bh, 0
+    mov al, 0x20 ; blank char
+    mov ah, 0x9
+    int 0x10
+	popa
+ret
+
+printTela:
+	mov si, player_one_print
+	call printe
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov al, 0
+	call putchar
+	mov si, player_two_print
+	call printf
+	;Segunda Linha
+	call endl
+	mov al, 0
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	mov al, 63
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	mov al, 63
+	call putchar
+	call endl
+	;Terceira Linha
+	call endl
+	mov di, cards_player_one
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 82
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	inc di
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 80
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	inc di
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 83
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	call putchar
+	call putchar
+	mov di, cards_player_two
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 82
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	inc di
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 80
+	call putchar
+	mov al, 0
+	call putchar
+	call putchar
+	inc di
+	mov al, byte[di]
+	add al, 48
+	call putchar
+	mov al, 83
+	call putchar
+	call endl
+ret
+
 start_game:
 	;pusha
 	xor cx,cx;
@@ -142,7 +309,7 @@ start_game:
 		;call endl
 		;mov si, rand
 		call endl
-		call printf
+		;call printf
 		call endl
 		mov si, player_one_print
 		call printf
@@ -306,21 +473,32 @@ start_game:
 					jmp player_two_won
 
 				player_one_won:
+					;mov byte[rodada], cl
+					call limpe
+					;mov cl, byte[rodada]
+					call printTela
 					inc byte[pontuation_player_one]
 					call endl
 					mov si, player1_victory
 					call printf
 					jmp end_decision
 				player_two_won:
+					;mov byte[rodada], cl
+					call limpe
+					;mov cl, byte[rodada]
+					call printTela
 					inc byte[pontuation_player_two]
 					call endl
 					mov si, player2_victory
 					call printf
 					jmp end_decision
 				draw:
+					call limpe
+					call printTela
 					mov si, it_is_a_draw
-					call endl
+					;call endl
 					call printf
+					
 					jmp end_decision
 			end_decision:
 			inc cl
@@ -328,7 +506,9 @@ start_game:
 			jne begin
 			jmp end
 		end:
+			
 			call endl
+			call limpaTela
 			mov si, it_is_the_freaking_end
 			call printf
 			final_decision:
@@ -353,13 +533,29 @@ start_game:
 					mov si, it_is_a_draw
 					call endl
 					call printf
+		
+				
 				jmp end_game
 				
-				
-			
+
 	
 end_game:
+	mov di, cards_player_one
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	mov di, cards_player_two
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	mov byte[choice_player_one], 0
+	mov byte[choice_player_two], 0
 	;popa
+;break
 ret
 
 
@@ -420,7 +616,7 @@ main:
 				mov si, start
 				mov di , start
 				call printf
-				call start_game
+				;call start_game
 				jmp game
 			
 		
