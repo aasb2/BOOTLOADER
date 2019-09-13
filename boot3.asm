@@ -7,6 +7,8 @@ marker db ">",0
 choice db 0
 choice_player_one db 0
 choice_player_two db 0
+pontuation_player_one db 0
+pontuation_player_two db 0
 cards_player_one times 3 db 3
 cards_player_two times 3 db 3
 batata times 3 db 0
@@ -15,6 +17,9 @@ player_one_print db "PLAYER 1",0
 player_two_print db "PLAYER 2",0
 it_is_the_freaking_end db "IT IS THE FREAKING END!!!!!!!",0
 rand db "asfdhhjsdgsghs|",0
+it_is_a_draw db "DRAW",0
+player1_victory db "PLAYER ONE VICTORY",0
+player2_victory db "PLAYER TWO VICTORY",0
 
 getchar:
 	mov ah, 0x0
@@ -134,8 +139,8 @@ start_game:
 	;pusha
 	xor cx,cx;
 	begin:
-		call endl
-		mov si, rand
+		;call endl
+		;mov si, rand
 		call endl
 		call printf
 		call endl
@@ -274,15 +279,49 @@ start_game:
 
 
 			decision:
-				cmp 
+				mov si, choice_player_one
+				mov di, choice_player_two
+				lodsb
+				mov si, choice_player_one
+				cmp byte[di], al
+				je draw
+				cmp byte[si], 'R'
+				je player_one_choosed_rock
+				cmp byte[si], 'P'
+				je player_one_choosed_paper
+				cmp byte[si], 'S'
+				je player_one_choosed_scisors
+
+				player_one_choosed_rock:
+					cmp byte[di], 'S'
+					je player_one_won
+					jmp player_two_won
+				player_one_choosed_paper:
+					cmp byte[di], 'R'
+					je player_one_won
+					jmp player_two_won
+				player_one_choosed_scisors:
+					cmp byte[di], 'P'
+					je player_one_won
+					jmp player_two_won
 
 				player_one_won:
-
-
+					inc byte[pontuation_player_one]
+					call endl
+					mov si, player1_victory
+					call printf
+					jmp end_decision
 				player_two_won:
-
+					inc byte[pontuation_player_two]
+					call endl
+					mov si, player2_victory
+					call printf
+					jmp end_decision
 				draw:
-
+					mov si, it_is_a_draw
+					call endl
+					call printf
+					jmp end_decision
 			end_decision:
 			inc cl
 			cmp cl, 9
@@ -292,7 +331,32 @@ start_game:
 			call endl
 			mov si, it_is_the_freaking_end
 			call printf
-			jmp end_program
+			final_decision:
+				mov si, pontuation_player_one
+				mov di, pontuation_player_two
+				lodsb
+				cmp byte[di], al
+				je draw_for_real
+				jg player_two_won_for_real
+				jl player_one_won_for_real		
+				player_one_won_for_real:
+					call endl
+					mov si, player1_victory
+					call printf
+				jmp end_game
+				player_two_won_for_real:
+					call endl
+					mov si, player2_victory
+					call printf
+				jmp end_game
+				draw_for_real:
+					mov si, it_is_a_draw
+					call endl
+					call printf
+				jmp end_game
+				
+				
+			
 	
 end_game:
 	;popa
