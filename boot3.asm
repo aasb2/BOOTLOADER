@@ -11,6 +11,11 @@ cards_player_one times 3 db 3
 cards_player_two times 3 db 3
 batata times 3 db 0
 
+player_one_print db "PLAYER 1",0
+player_two_print db "PLAYER 2",0
+it_is_the_freaking_end db "IT IS THE FREAKING END!!!!!!!",0
+rand db "asfdhhjsdgsghs|",0
+
 getchar:
 	mov ah, 0x0
 	int 16h
@@ -126,89 +131,171 @@ ret
 
 
 start_game:
-	pusha
-		
-		begin:
-			player_one:
-				call getchar
-				cmp al, 'a'
-				je player_one_chooses_rock
-				cmp al, 's'
-				je player_one_chooses_paper
-				cmp al, 'd'
-				je player_one_chooses_scisors
+	;pusha
+	xor cx,cx;
+	begin:
+		call endl
+		mov si, rand
+		call endl
+		call printf
+		call endl
+		mov si, player_one_print
+		call printf
+		player_one:
+
+			call getchar
+			cmp al, 'a'
+			je player_one_chooses_rock
+			cmp al, 's'
+			je player_one_chooses_paper
+			cmp al, 'd'
+			je player_one_chooses_scisors
+			jmp player_one
+
+			player_one_chooses_rock:
+				mov si, cards_player_one
+				cmp byte[si], 0
+				jne player_one_can_choose_rock
+				je player_one
 				jmp player_one
-
-				player_one_chooses_rock:
-					mov si, cards_player_one
-					
-					cmp byte[si], 0
-					;lodsb
-					;add al, 48
-					;call putchar
-					jne player_one_can_choose_rock
-					je player_one
-					jmp player_one
-					player_one_can_choose_rock:
-						mov si, cards_player_one
-						mov di, cards_player_one
-						lodsb
-						dec byte[di]
-						stosb
-						mov di, choice_player_one
-						mov al, 'R'
-						call putchar
-						stosb
-						jmp end_player_one
-				player_one_chooses_paper:
-					mov si, cards_player_one
+				player_one_can_choose_rock:
 					mov di, cards_player_one
-					inc si
+					dec byte[di]
+					mov di, choice_player_one
+					mov byte[di], 'R'
+					call endl
+					mov al, byte[di]
+					call putchar
+					jmp end_player_one
+			player_one_chooses_paper:
+				mov si, cards_player_one
+				inc si
+				cmp byte[si], 0
+				jne player_one_can_choose_paper
+				je player_one
+				jmp player_one
+				player_one_can_choose_paper:
+					mov di, cards_player_one
 					inc di
-					;lodsb
+					dec byte[di]
+					mov di, choice_player_one
+					mov byte[di], 'P'	
+					call endl
+					mov al, byte[di]
+					call putchar
+					jmp end_player_one	
+			player_one_chooses_scisors:
+					mov si, cards_player_one
+					add si, 2
 					cmp byte[si], 0
-					;add al, 48
-					;call putchar
-					jne player_one_can_choose_paper
+					jne player_one_can_choose_scisors
 					je player_one
 					jmp player_one
-					player_one_can_choose_paper:
-						mov si, cards_player_one
+					player_one_can_choose_scisors:
 						mov di, cards_player_one
-						inc si
-						inc di
-						;lodsb
-						dec byte[di]
-						;stosb
-						mov di, choice_player_one
-						mov al, 'P' 
-						call putchar
-						stosb
-						jmp end_player_one
-							
-				player_one_chooses_scisors:
-						mov si, cards_player_one
-						mov di, cards_player_one
-						add si, 2
 						add di, 2
-						lodsb
-						cmp al, 0
-						jne player_one_can_choose_scisors
-						
-						player_one_can_choose_scisors
-						
-			end_player_one:
-				
+						dec byte[di]
+						mov di, choice_player_one
+						mov byte[di], 'S'
+						call endl
+						mov al, byte[di]
+						call putchar
+						jmp end_player_one	
+		end_player_one:
+			call endl
+			mov si, player_two_print
+			call printf
 
-			player_two:
+		player_two:
+
+			call getchar
+			cmp al, 'a'
+			je player_two_chooses_rock
+			cmp al, 's'
+			je player_two_chooses_paper
+			cmp al, 'd'
+			je player_two_chooses_scisors
+			jmp player_two
+
+			player_two_chooses_rock:
+				mov si, cards_player_two
+				cmp byte[si], 0
+				jne player_two_can_choose_rock
+				je player_two
+				jmp player_two
+				player_two_can_choose_rock:
+					mov di, cards_player_two
+					dec byte[di]
+					mov di, choice_player_two
+					mov byte[di], 'R'
+					call endl
+					mov al, byte[di]
+					call putchar
+					jmp end_player_two
+
+			player_two_chooses_paper:
+
+				mov si, cards_player_two
+				inc si
+				cmp byte[si], 0
+				jne player_two_can_choose_paper
+				je player_two
+				jmp player_two
+				player_two_can_choose_paper:
+					mov di, cards_player_two
+					inc di
+					dec byte[di]
+					mov di, choice_player_two
+					mov byte[di], 'P'	
+					call endl
+					mov al, byte[di]
+					call putchar
+					jmp end_player_two
+
+			player_two_chooses_scisors:
+					mov si, cards_player_two
+					add si, 2
+					cmp byte[si], 0
+					jne player_two_can_choose_scisors
+					je player_two
+					jmp player_two
+					player_two_can_choose_scisors:
+						mov di, cards_player_two
+						add di, 2
+						dec byte[di]
+						mov di, choice_player_two
+						mov byte[di], 'S'
+						call endl
+						mov al, byte[di]
+						call putchar
+						jmp end_player_two
+
 			end_player_two:
+
+
 			decision:
+				cmp 
+
+				player_one_won:
+
+
+				player_two_won:
+
+				draw:
+
 			end_decision:
-			jmp begin
+			inc cl
+			cmp cl, 9
+			jne begin
+			jmp end
 		end:
+			call endl
+			mov si, it_is_the_freaking_end
+			call printf
+			jmp end_program
 	
 end_game:
-	popa
+	;popa
 ret
 
 
@@ -281,9 +368,9 @@ main:
 			je game
 			jmp instructions
 		game:
-			call getchar
-			call putchar
-			jmp start_game
+			;call getchar
+			;call putchar
+			call start_game
 
 	end_finite_state_machine:
 	
