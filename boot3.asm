@@ -8,12 +8,17 @@ instruct db "Instructions",0
 marker db ">",0
 rodada db 0
 choice db 0
+winner db 0
+vencedor db 0
+state db 0
 choice_player_one db 0
 choice_player_two db 0
 pontuation_player_one db 0
 pontuation_player_two db 0
 cards_player_one times 3 db 3
 cards_player_two times 3 db 3
+old_cards_player_one times 3 db 3
+old_cards_player_two times 3 db 3
 ;batata times 3 db 0
 
 player_one_print db "PLAYER 1",0
@@ -194,128 +199,299 @@ limpe:
 	popa
 ret
 
+
+blank:
+	pusha
+	mov al, 0
+	xor cx, cx
+	loop_blank:
+		cmp cx,dx
+		je end_loop_blank
+		call putchar
+		inc cx
+		jmp loop_blank
+	end_loop_blank:
+	popa
+	ret
+end_blank:
+
+mult_endl:
+	pusha
+	xor cx,cx
+	loop_mult_endl:
+		cmp cx, dx
+		je end_loop_blank
+		call endl
+		inc cx
+		jmp loop_mult_endl
+	end_loop_mult_end:
+	popa
+	ret
+mult_endl_end:
+
+delay1s:
+	pusha
+	mov cx, 0fh
+	mov dx, 4240h
+	mov ah, 86h
+	int 15h
+	popa
+ ret
+
 printTela:
-	mov si, player_one_print
-	call printe
-	mov al, 0
+	pusha
+	call limpaTela
+	mov dx, 7
+	call mult_endl
+	mov dx, 13
+	call blank
+	mov al, 'P'
 	call putchar
-	mov al, 0
+	mov al, '1'
 	call putchar
-	mov al, 0
+	mov dx, 10
+	call blank
+	mov al, 'P'
 	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov al, 0
-	call putchar
-	mov si, player_two_print
-	call printf
-	;Segunda Linha
-	call endl
-	mov al, 0
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	mov al, 63
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	mov al, 63
+	mov al, '2'
 	call putchar
 	call endl
-	;Terceira Linha
-	call endl
-	mov di, cards_player_one
-	mov al, byte[di]
-	add al, 48
+	mov dx, 13
+	call blank
+	mov al, byte[pontuation_player_one]
+	add al,48
 	call putchar
-	mov al, 82
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	inc di
-	mov al, byte[di]
-	add al, 48
-	call putchar
-	mov al, 80
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	inc di
-	mov al, byte[di]
-	add al, 48
-	call putchar
-	mov al, 83
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	call putchar
-	call putchar
-	mov di, cards_player_two
-	mov al, byte[di]
-	add al, 48
-	call putchar
-	mov al, 82
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	inc di
-	mov al, byte[di]
-	add al, 48
-	call putchar
-	mov al, 80
-	call putchar
-	mov al, 0
-	call putchar
-	call putchar
-	inc di
-	mov al, byte[di]
-	add al, 48
-	call putchar
-	mov al, 83
+	mov dx, 12
+	call blank
+	mov al, byte[pontuation_player_two]
+	add al,48
 	call putchar
 	call endl
+	;Ifcase
+	cmp byte[state], 1
+	je Ajogou
+	cmp byte[state], 2
+	je Bjogou
+	cmp byte[state], 3
+	je CFinal
+	cmp byte[state], 4
+	je DFinal
+
+	call endl
+	call endl
+	jmp end_printTela
+
+	Ajogou:
+		call endl
+		mov dx, 14
+		call blank
+		mov al, 'X'
+		call putchar
+		call endl
+		jmp end_printTela
+	Bjogou:
+		call endl
+		mov dx, 14
+		call blank
+		mov al, 'X'
+		call putchar
+		mov dx, 10
+		call blank
+		mov al, 'X'
+		call putchar
+		call endl
+		jmp end_printTela
+	CFinal:
+		;call endl
+		;Atualizacartas
+		
+		
+		cmp byte[vencedor], 1
+		je Venc1
+		jg Venc2
+		jmp Tie
+		Venc1:
+			mov dx, 18
+			call blank
+			mov al, '+'
+			call putchar
+			mov al, '1'
+			call putchar
+			mov al, 'P'
+			call putchar
+			mov al, '1'
+			call putchar
+			call endl
+			jmp abc
+			
+		Venc2:				
+			mov dx, 18
+			call blank
+			mov al, '+'
+			call putchar
+			mov al, '1'
+			call putchar
+			mov al, 'P'
+			call putchar
+			mov al, '2'
+			call putchar
+			call endl
+			jmp abc
+			
+		Tie:				
+			mov dx, 18
+			call blank
+			mov al, 'T'
+			call putchar
+			mov al, 'I'
+			call putchar
+			mov al, 'E'
+			call putchar
+			mov al, '!'
+			call putchar
+			call endl
+			jmp abc
+			
+		abc:
+		;  Mostrar cartas
+		mov dx, 14
+		call blank
+		mov al, byte[choice_player_one]
+		call putchar
+		mov dx, 10
+		call blank
+		mov al, byte[choice_player_two]
+		call putchar
+		call endl
+		;call delay1s
+		jmp end_printTela
+	
+	DFinal:
+		mov dx, 17
+		call blank
+		cmp byte[winner], 1
+		je win1		
+		jg win2
+		jmp igual
+		
+		win1:
+			mov al, 'P'
+			call putchar
+			mov al, '1'
+			call putchar
+			mov al, ' '
+			call putchar
+			mov al, 'W'
+			call putchar
+			mov al, 'O'
+			call putchar
+			mov al, 'N'
+			call putchar
+			jmp out
+		win2:
+			mov al, 'P'
+			call putchar
+			mov al, '2'
+			call putchar
+			mov al, ' '
+			call putchar
+			mov al, 'W'
+			call putchar
+			mov al, 'O'
+			call putchar
+			mov al, 'N'
+			call putchar
+			jmp out
+		igual:
+			mov al, ' '
+			call putchar
+			mov al, 'D'
+			call putchar
+			mov al, 'R'
+			call putchar
+			mov al, 'A'
+			call putchar
+			mov al, 'W'
+			call putchar
+			mov al, '!'
+			call putchar
+		out:
+		call endl
+		mov dx, 14
+		call blank
+		mov al, byte[choice_player_one]
+		call putchar
+		mov dx, 10
+		call blank
+		mov al, byte[choice_player_two]
+		call putchar
+		call endl
+		;call delay1s
+		jmp end_printTela
+	
+	end_printTela:
+		mov dx, 13
+		call blank
+		mov si, old_cards_player_one
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'R'
+		call putchar
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'P'
+		call putchar
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'S'
+		call putchar
+		mov dx, 2
+		call blank
+		mov si, old_cards_player_two
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'R'
+		call putchar
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'P'
+		call putchar
+		lodsb
+		add al, 48
+		call putchar
+		mov al, 'S'
+		call putchar	
+		call delay1s
+		cmp byte[state], 3
+		je delay
+		cmp byte[state], 4
+		je delay
+		jmp ndelay
+		delay:
+		
+			call delay1s
+		ndelay:
+	popa
 ret
 
 start_game:
 	;pusha
 	xor cx,cx;
 	begin:
-		;call endl
-		;mov si, rand
-		call endl
-		;call printf
-		call endl
-		mov si, player_one_print
-		call printf
+		mov byte[state], 0
+		mov byte[choice_player_one], 'X'
+		mov byte[choice_player_two], 'X'
+		call printTela
 		player_one:
 
 			call getchar
+			;mov bx, state
+			mov byte[state], 1
 			cmp al, 'a'
 			je player_one_chooses_rock
 			cmp al, 's'
@@ -335,9 +511,9 @@ start_game:
 					dec byte[di]
 					mov di, choice_player_one
 					mov byte[di], 'R'
-					call endl
-					mov al, byte[di]
-					call putchar
+					;call endl
+					;mov al, byte[di]
+					;call putchar
 					jmp end_player_one
 			player_one_chooses_paper:
 				mov si, cards_player_one
@@ -352,9 +528,9 @@ start_game:
 					dec byte[di]
 					mov di, choice_player_one
 					mov byte[di], 'P'	
-					call endl
-					mov al, byte[di]
-					call putchar
+					;call endl
+					;mov al, byte[di]
+					;call putchar
 					jmp end_player_one	
 			player_one_chooses_scisors:
 					mov si, cards_player_one
@@ -369,18 +545,16 @@ start_game:
 						dec byte[di]
 						mov di, choice_player_one
 						mov byte[di], 'S'
-						call endl
-						mov al, byte[di]
-						call putchar
+						;call endl
+						;mov al, byte[di]
+						;call putchar
 						jmp end_player_one	
 		end_player_one:
-			call endl
-			mov si, player_two_print
-			call printf
-
+			call printTela
 		player_two:
 
 			call getchar
+			mov byte[state], 2
 			cmp al, 'a'
 			je player_two_chooses_rock
 			cmp al, 's'
@@ -400,9 +574,9 @@ start_game:
 					dec byte[di]
 					mov di, choice_player_two
 					mov byte[di], 'R'
-					call endl
-					mov al, byte[di]
-					call putchar
+					;call endl
+					;mov al, byte[di]
+					;call putchar
 					jmp end_player_two
 
 			player_two_chooses_paper:
@@ -437,13 +611,39 @@ start_game:
 						dec byte[di]
 						mov di, choice_player_two
 						mov byte[di], 'S'
-						call endl
-						mov al, byte[di]
-						call putchar
+						;call endl
+						;mov al, byte[di]
+						;call putchar
 						jmp end_player_two
 
 			end_player_two:
+			call printTela
 
+			mov si, cards_player_one
+			mov dl, byte[si]
+			mov di, old_cards_player_one
+			mov byte[di], dl
+			inc si
+			inc di		
+			mov dl, byte[si]
+			mov byte[di], dl
+			inc si
+			inc di		
+			mov dl, byte[si]
+			mov byte[di], dl					
+		
+			mov si, cards_player_two
+			mov dl, byte[si]
+			mov di, old_cards_player_two
+			mov byte[di], dl
+			inc si
+			inc di		
+			mov dl, byte[si]
+			mov byte[di], dl
+			inc si
+			inc di		
+			mov dl, byte[si]
+			mov byte[di], dl	
 
 			decision:
 				mov si, choice_player_one
@@ -473,44 +673,32 @@ start_game:
 					jmp player_two_won
 
 				player_one_won:
-					;mov byte[rodada], cl
-					call limpe
-					;mov cl, byte[rodada]
-					call printTela
+					mov byte[vencedor], 1
 					inc byte[pontuation_player_one]
-					call endl
-					mov si, player1_victory
-					call printf
 					jmp end_decision
 				player_two_won:
-					;mov byte[rodada], cl
-					call limpe
-					;mov cl, byte[rodada]
-					call printTela
+					mov byte[vencedor], 2
 					inc byte[pontuation_player_two]
-					call endl
-					mov si, player2_victory
-					call printf
 					jmp end_decision
 				draw:
-					call limpe
-					call printTela
-					mov si, it_is_a_draw
-					;call endl
-					call printf
+					mov byte[vencedor], 0
+					
 					
 					jmp end_decision
 			end_decision:
+
+			mov byte[state], 3
+			call printTela
 			inc cl
 			cmp cl, 9
 			jne begin
 			jmp end
 		end:
 			
-			call endl
-			call limpaTela
-			mov si, it_is_the_freaking_end
-			call printf
+			;call endl
+			;call limpaTela
+			;mov si, it_is_the_freaking_end
+			;call printf
 			final_decision:
 				mov si, pontuation_player_one
 				mov di, pontuation_player_two
@@ -520,19 +708,13 @@ start_game:
 				jg player_two_won_for_real
 				jl player_one_won_for_real		
 				player_one_won_for_real:
-					call endl
-					mov si, player1_victory
-					call printf
-				jmp end_game
+					mov byte[winner], 1
+					jmp end_game
 				player_two_won_for_real:
-					call endl
-					mov si, player2_victory
-					call printf
-				jmp end_game
+					mov byte[winner], 2
+					jmp end_game
 				draw_for_real:
-					mov si, it_is_a_draw
-					call endl
-					call printf
+					mov byte[winner], 0
 		
 				
 				jmp end_game
@@ -540,6 +722,8 @@ start_game:
 
 	
 end_game:
+	mov byte[state], 4
+	call printTela
 	mov di, cards_player_one
 	mov byte[di], 3
 	inc di
@@ -566,7 +750,8 @@ main:
 
 	call reset_registers
 	call video
-
+	mov al, '!'
+	call endl
 
 	finite_state_machine:
 
