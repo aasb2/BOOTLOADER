@@ -20,7 +20,7 @@ printString:
 	int 10h	
 
 	mov dx, 100;tempo do delay
-	call delay 
+	;call delay 
 	
 	jmp printString
 exit:
@@ -46,13 +46,13 @@ printDots:
 		mov si, dot
 		call printString
 		mov dx, 600
-		call delay
+		;call delay
 	dec cx
 	cmp cx, 0
 	jne for
 
 	mov dx, 1200
-	call delay
+	;call delay
 	mov si, finalDot
 	call printString
 	

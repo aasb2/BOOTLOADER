@@ -19,15 +19,136 @@ cards_player_one times 3 db 3
 cards_player_two times 3 db 3
 old_cards_player_one times 3 db 3
 old_cards_player_two times 3 db 3
-;batata times 3 db 0
 
-player_one_print db "PLAYER 1",0
-player_two_print db "PLAYER 2",0
-it_is_the_freaking_end db "IT IS THE FREAKING END!!!!!!!",0
-rand db "asfdhhjsdgsghs|",0
-it_is_a_draw db "DRAW",0
-player1_victory db "PLAYER ONE VICTORY",0
-player2_victory db "PLAYER TWO VICTORY",0
+logo db 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 14, 0, 14, 0, 0, 0, 0, 0, 0, 14, 14, 14, 11, 11, 11, 14, 14, 5, 0, 0, 0, 0, 0, 0, 14, 5, 14, 11, 11, 11, 14, 5, 14, 0, 14, 0, 0, 0, 0, 14, 14, 14, 11, 14, 11, 5, 11, 5, 11, 5, 0, 0, 0, 0, 5, 5, 5, 11, 5, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 14, 14, 14, 11, 14, 11, 0, 0, 11, 11, 11, 11, 14, 14, 14, 14, 5, 14, 11, 5, 5, 0, 0, 11, 14, 14, 14, 5, 14, 5, 14, 14, 14, 5, 14, 10, 14, 14, 14, 14, 5, 14, 14, 14, 5, 5, 5, 5, 10, 10, 10, 5, 14, 5, 14, 14, 14, 5, 5, 10, 0, 10, 10, 0, 0, 0, 14, 14, 5, 5, 5, 5, 10, 10, 10, 0, 0, 0, 0, 0, 0, 5, 10, 5, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+
+printCard1Image:
+	pusha
+	mov cx, 120
+	mov dx, 107
+	mov ah, 0ch
+	mov bh, 0
+	lodsb
+	c1loop:
+		innerc1loop:
+			int 10h
+			inc cx
+			cmp cx, 135
+			je e.innerc1loop
+			lodsb
+			jmp innerc1loop
+		e.innerc1loop:
+		inc dx
+		mov cx, 120
+		cmp dx, 122
+		je e.c1loop
+		lodsb
+		jmp c1loop
+	e.c1loop:
+	popa
+
+	printCard1Square:
+	pusha
+	mov ah, 0ch
+	mov bh, 0
+	mov al, 0xf
+	mov dx, 85
+	mov cx, 105
+	int 10h
+	c1square1:
+		int 10h
+		inc cx
+		cmp cx, 150
+		je e.c1square1
+		jmp c1square1
+	e.c1square1:
+	c1square2:
+		int 10h
+		inc dx
+		cmp dx, 145
+		je e.c1square2
+		jmp c1square2
+	e.c1square2:
+	c1square3:
+		int 10h
+		dec cx
+		cmp cx, 105
+		je e.c1square3
+		jmp c1square3
+	e.c1square3:
+	c1square4:
+		int 10h
+		dec dx
+		cmp dx, 85
+		je e.c1square4
+		jmp c1square4
+	e.c1square4:
+	popa
+ret
+
+printCard2Image:
+	pusha
+	mov cx, 182
+	mov dx, 107
+	mov ah, 0ch
+	mov bh, 0
+	lodsb
+	c2loop:
+		innerc2loop:
+			int 10h
+			inc cx
+			cmp cx, 197
+			je e.innerc2loop
+			lodsb
+			jmp innerc2loop
+		e.innerc2loop:
+		inc dx
+		mov cx, 182
+		cmp dx, 122
+		je e.c2loop
+		lodsb
+		jmp c2loop
+	e.c2loop:
+	popa
+
+	printCard2Square:
+	pusha
+	mov ah, 0ch
+	mov bh, 0
+	mov al, 0xf
+	mov dx, 85
+	mov cx, 167
+	int 10h
+	c2square1:
+		int 10h
+		inc cx
+		cmp cx, 212
+		je e.c2square1
+		jmp c2square1
+	e.c2square1:
+	c2square2:
+		int 10h
+		inc dx
+		cmp dx, 145
+		je e.c2square2
+		jmp c2square2
+	e.c2square2:
+	c2square3:
+		int 10h
+		dec cx
+		cmp cx, 167
+		je e.c2square3
+		jmp c2square3
+	e.c2square3:
+	c2square4:
+		int 10h
+		dec dx
+		cmp dx, 85
+		je e.c2square4
+		jmp c2square4
+	e.c2square4:
+	popa
+ret
 
 getchar:
 	mov ah, 0x0
@@ -108,22 +229,6 @@ printf:
 		call endl
 		popa
 	ret
-
-printe:
-	pusha
-	;call video
-	xor dx, dx
-	printe_loop:
-		lodsb
-		cmp al,0
-		je end_printe
-		inc dx
-		call putchar
-		jmp printe_loop
-	end_printe:
-		;call endl
-		popa
-	ret
 video:
 	xor ax, ax
 	mov bx, ax
@@ -162,43 +267,23 @@ ret
 
 limpaTela:
 	pusha
-;; Limpa a tela dos caracteres colocados pela BIOS
-	; Set the cursor to top left-most corner of screen
 	mov dx, 0 
     mov bh, 0      
     mov ah, 0x2
     int 0x10
 
-    ; print 2000 blanck chars to clean  
     mov cx, 2000 
     mov bh, 0
     mov al, 0x20 ; blank char
     mov ah, 0x9
     int 0x10
     
-    ;Reset cursor to top left-most corner of screen
     mov dx, 0 
     mov bh, 0      
     mov ah, 0x2
     int 0x10
 	popa
 ret
-
-limpe: 
-	pusha
-	mov dx, 0 
-    mov bh, 0      
-    mov ah, 0x2
-    int 0x10
-
-	mov cx, 2000 
-    mov bh, 0
-    mov al, 0x20 ; blank char
-    mov ah, 0x9
-    int 0x10
-	popa
-ret
-
 
 blank:
 	pusha
@@ -277,29 +362,93 @@ printTela:
 	cmp byte[state], 4
 	je DFinal
 
-	call endl
-	call endl
+	mov dx, 6
+	call mult_endl
 	jmp end_printTela
 
 	Ajogou:
 		call endl
+		call endl
 		mov dx, 14
 		call blank
-		mov al, 'X'
-		call putchar
-		call endl
+		mov si, logo
+		call printCard1Image
+		mov dx, 4
+		call mult_endl
+		pusha
+			mov ah, 0ch
+			mov bh, 0
+			mov al, 0xf
+			mov cx, 107
+			mov dx, 87
+			int 10h
+			mov cx, 109
+			int 10h
+			mov cx, 107
+			mov dx, 89
+			int 10h
+			mov cx, 148
+			mov dx, 143
+			int 10h
+			mov cx, 146
+			int 10h
+			mov cx, 148
+			mov dx, 141
+			int 10h
+		popa
 		jmp end_printTela
 	Bjogou:
 		call endl
 		mov dx, 14
 		call blank
-		mov al, 'X'
-		call putchar
-		mov dx, 10
-		call blank
-		mov al, 'X'
-		call putchar
+		mov si, logo
+		call printCard1Image
+		pusha
+			mov ah, 0ch
+			mov bh, 0
+			mov al, 0xf
+			mov cx, 107
+			mov dx, 87
+			int 10h
+			mov cx, 109
+			int 10h
+			mov cx, 107
+			mov dx, 89
+			int 10h
+			mov cx, 148
+			mov dx, 143
+			int 10h
+			mov cx, 146
+			int 10h
+			mov cx, 148
+			mov dx, 141
+			int 10h
+		popa
+		call printCard2Image
 		call endl
+		mov dx, 4
+		call mult_endl
+		pusha
+			mov ah, 0ch
+			mov bh, 0
+			mov al, 0xf
+			mov cx, 169
+			mov dx, 87
+			int 10h
+			mov cx, 171
+			int 10h
+			mov cx, 169
+			mov dx, 89
+			int 10h
+			mov cx, 210
+			mov dx, 143
+			int 10h
+			mov cx, 208
+			int 10h
+			mov cx, 210
+			mov dx, 141
+			int 10h
+		popa
 		jmp end_printTela
 	CFinal:
 		;call endl
@@ -354,16 +503,22 @@ printTela:
 			
 		abc:
 		;  Mostrar cartas
-		mov dx, 14
+		mov dx, 4
+		call mult_endl
+		mov dx, 16
 		call blank
 		mov al, byte[choice_player_one]
 		call putchar
-		mov dx, 10
+		mov dx, 6
 		call blank
 		mov al, byte[choice_player_two]
 		call putchar
+		mov bl, 0
 		call endl
 		;call delay1s
+		call printCard1Square
+		call printCard2Square
+		mov bl, 0
 		jmp end_printTela
 	
 	DFinal:
@@ -416,56 +571,85 @@ printTela:
 			mov al, '!'
 			call putchar
 		out:
-		call endl
-		mov dx, 14
-		call blank
-		mov al, byte[choice_player_one]
-		call putchar
-		mov dx, 10
-		call blank
-		mov al, byte[choice_player_two]
-		call putchar
-		call endl
+		mov dx, 6
+		call mult_endl
+		;mov dx, 14
+		;call blank
+		;mov al, byte[choice_player_one]
+		;call putchar
+		;mov bl, 0
+		;mov dx, 10
+		;call blank
+		;mov al, byte[choice_player_two]
+		;mov bl, 0
+		;call putchar
+		;call endl
 		;call delay1s
 		jmp end_printTela
 	
 	end_printTela:
+		mov dx, 5
+		call mult_endl
 		mov dx, 13
 		call blank
 		mov si, old_cards_player_one
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'R'
+		mov bl, 0xc
 		call putchar
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'P'
+		mov bl, 0xd
 		call putchar
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'S'
+		mov bl, 0xb
 		call putchar
 		mov dx, 2
 		call blank
 		mov si, old_cards_player_two
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'R'
+		mov bl, 0xc
 		call putchar
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'P'
+		mov bl, 0xd
 		call putchar
 		lodsb
 		add al, 48
+		mov bl, 0xf
 		call putchar
 		mov al, 'S'
-		call putchar	
+		mov bl, 0xb
+		call putchar
+		mov ah, 0ch
+		mov bh, 0
+		mov al, 0xf
+		mov dx, 82
+		mov cx, 101
+		lineprint:
+			int 10h
+			inc cx
+			cmp cx, 218
+			je e.lineprint
+		jmp lineprint
+		e.lineprint:
 		call delay1s
 		cmp byte[state], 3
 		je delay
@@ -473,9 +657,9 @@ printTela:
 		je delay
 		jmp ndelay
 		delay:
-		
 			call delay1s
 		ndelay:
+		mov ah, 0ch
 	popa
 ret
 
@@ -715,11 +899,7 @@ start_game:
 					jmp end_game
 				draw_for_real:
 					mov byte[winner], 0
-		
-				
 				jmp end_game
-				
-
 	
 end_game:
 	mov byte[state], 4
@@ -740,6 +920,7 @@ end_game:
 	mov byte[choice_player_two], 0
 	;popa
 ;break
+;FAZER RESETAR O JOGO
 ret
 
 
@@ -750,8 +931,6 @@ main:
 
 	call reset_registers
 	call video
-	mov al, '!'
-	call endl
 
 	finite_state_machine:
 
@@ -761,7 +940,6 @@ main:
 		menu:
 			
 			call getchar
-			;call putchar
 			cmp al, 's'
 			je up_one_choice
 			cmp al, 'w'
@@ -794,7 +972,7 @@ main:
 				jmp choice_game
 			choice_instructions:
 				mov si, instruct
-				mov di , instruct
+				mov di, instruct
 				call printf
 				jmp instructions
 			choice_game:
@@ -813,18 +991,7 @@ main:
 			je game
 			jmp instructions
 		game:
-			;call getchar
-			;call putchar
 			call start_game
-
-	end_finite_state_machine:
-	
-	
- 
-
-
-
-end_program:
 	jmp $
 times 10000-($-$$) db 0
 dw 0xaa55
