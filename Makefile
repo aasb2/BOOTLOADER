@@ -52,3 +52,6 @@ launchqemu:
 	
 clean:
 	rm -f *.bin $(bootdisk) *~
+	rm -f *.bin $(boot1) *~
+	rm -f *.bin $(boot1) *~
+	rm -f *.bin $(kernel) *~
