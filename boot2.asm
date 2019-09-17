@@ -1,139 +1,135 @@
-org 0x500; 
-jmp 0x000: start
+org 0500h
 
+jmp inicio
 
-str1 db 'Loading structures for the kernel',0
-str2 db 'Setting up protected mode', 0
-str3 db 'Loading kernel in memory', 0
-str4 db 'Running kernel', 0
-dot db '.', 0
-finalDot db '.', 10, 13, 0
+MSG1:	db 'Carregando estruturas para o kernel...        ', 0
+MSG2:	db 'Inicializando o modo protegido...             ', 0
+MSG3:	db 'Carregando o kernel na memoria...             ', 0
+OK:		db 'OK!', 0
+KERNEL:	db 'Operacao concluida! Inicializando o kernel...', 0
 
-printString: 
-;; Printa a string que esta em si    
+DRIVE:	db 0
+
+inicio:
+	cli
+	mov AX, 09000h
+	mov SS, AX			; cria uma pilha
+	mov SP, 0FB00h
 	
-	lodsb
-	cmp al, 0
-	je exit
-
-	mov ah, 0xe
-	int 10h	
-
-	mov dx, 100;tempo do delay
-	;call delay 
+	xor AX, AX			; zera DS
+	mov DS, AX
 	
-	jmp printString
-exit:
-ret
-
-delay: 
-;; Função que aplica um delay(improvisado) baseado no valor de dx
-	mov bp, dx
-	back:
-	dec bp
-	nop
-	jnz back
-	dec dx
-	cmp dx,0    
-	jnz back
-ret
-
-printDots:
-;; Printa os pontos das reticências
-	mov cx, 2
-
-	for:
-		mov si, dot
-		call printString
-		mov dx, 600
-		;call delay
-	dec cx
-	cmp cx, 0
-	jne for
-
-	mov dx, 1200
-	;call delay
-	mov si, finalDot
-	call printString
+	mov AX, 0B800h		; inicializa ES na memória de vídeo
+	mov ES, AX
+	sti
+	
+	mov byte[DRIVE], DL
+	mov BX, 01
+	
+	call limpa_tela		; limpa a tela com a cor 3 = ciano
+	call delay
+	
+	mov BX, 160 + 98 + 10
+	
+	mov SI, MSG1
+	call imprime_msg
+	
+	mov SI, MSG2		; imprime as mensagens de load
+	call imprime_msg
+	
+	mov SI, MSG3
+	jmp call_kernel		; tenta carregar o kernel na memória
+	
+; -------------------- SUB-ROTINAS --------------------
+	
+limpa_tela:
+	mov byte[ES:BX], 33h	; cor = ciano
+	add BX, 2
+	
+	cmp BX, 4000
+	jb limpa_tela
 	
 ret
 
-
-limpaTela:
-;; Limpa a tela dos caracteres colocados pela BIOS
-	; Set the cursor to top left-most corner of screen
-	mov dx, 0 
-    mov bh, 0      
-    mov ah, 0x2
-    int 0x10
-
-    ; print 2000 blanck chars to clean  
-    mov cx, 2000 
-    mov bh, 0
-    mov al, 0x20 ; blank char
-    mov ah, 0x9
-    int 0x10
-    
-    ;Reset cursor to top left-most corner of screen
-    mov dx, 0 
-    mov bh, 0      
-    mov ah, 0x2
-    int 0x10
+delay:
+	mov AH, 86h
+	mov CX, 000Ah
+	mov DX, 000Ah		; delay de (20 << 16 + 40)us
+	int 15h
+	
 ret
 
-start:
-	mov bl, 10 ; Seta cor dos caracteres para verde
-	call limpaTela
+mini_delay:
+	mov AH, 86h
+	mov CX, 0001h
+	mov DX, 3000h
+	int 15h
+
+ret
+
+imprime_msg:
+	add BX, 160 - 98
+	call print_string
 	
-	mov si, str1
-	call printString
-	call printDots
+	call delay
+	
+	mov SI, OK
+	call print_string
+	
+	call delay
+	
+ret
 
-	mov si, str2
-	call printString
-	call printDots
+print_string:
+	mov DL, byte[SI]
+	mov byte[ES:BX], DL			; escreve caractere na memória de vídeo
+	inc BX
+	
+	mov byte[ES:BX], 34h		; seleciona o atributo do caractere (fundo = ciano, cor = vermelha)
+	inc BX
+	inc SI
+	
+	call mini_delay
+	
+	cmp byte[SI], 0
+	jne print_string
+	
+ret
 
-	mov si, str3
-	call printString
-	call printDots
+; -------------------- CHAMADA DO KERNEL --------------------
 
-	mov si, str4
-	call printString
-	call printDots
-
-;Carrega na memoria o kernel
-	xor ax, ax
-	mov ds, ax
-
-;Resetando o disco floppy, forçando também a setar todas as trilhas para 0
-reset:
-	mov ah,0		
-	mov dl,0		
-	int 13h			
-	jc reset		;em caso de erro, tenta de novo, 
-
-load_menu:
-;Setando a posição do disco onde kernel.asm foi armazenado(ES:BX = [0x7E00:0x0])
-	mov ax,0x7E0	;0x7E0<<1 + 0 = 0x7E00
-	mov es,ax
-	xor bx,bx		;Zerando o offset
-
-;Setando a posição da Ram onde o menu será lido
-	mov ah, 0x02	;comando de ler setor do disco
-	mov al,4		;quantidade de blocos ocupados pelo menu
-	mov dl,0		;drive floppy
-
-;Usaremos as seguintes posições na memoria:
-	mov ch,0		;trilha 0
-	mov cl,3		;setor 3
-	mov dh,0		;cabeca 0
-	int 13h
-	jc load_menu	;em caso de erro, tenta de novo
-
-break:	
-	jmp 0x7e00		;Pula para a posição carregada
-
-times 510-($-$$) db 0		
-dw 0xaa55					
-
-
+call_kernel:
+	add BX, 160 - 98
+	call print_string
+	
+	call delay
+	
+	mov SI, OK
+	call print_string
+	
+	call delay
+	add BX, 320 - 98
+	
+	mov SI, KERNEL
+	call print_string
+	
+	call delay
+	
+	load_hd:
+		mov DI, BX
+		
+		mov AX, 07E0h
+		mov ES, AX		; carrega novo endereço (end. 7E00h)
+		xor BX, BX
+		
+		mov AH, 02h		; faz nova leitura do disco
+		mov AL, 10		; vai ler 10 setores
+		mov CH, 00h		; nº da linha = 0
+		mov CL, 03h		; nº do setor = 3
+		mov DH, 00h
+		mov DL, byte[DRIVE]
+		int 13h
+		
+		jc load_hd		; se leu com sucesso, pula para o endereço do kernel (ES:00)
+	
+	jmp 7E00h
