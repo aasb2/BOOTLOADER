@@ -19,7 +19,7 @@ file = $(bootdisk)
 
 # adicionem os targets do kernel e do segundo estágio para usar o make all com eles
  
-all: clean mydisk boot1 write_boot1 boot2 write_boot2 kernel write_kernel hexdump launchqemu
+all: mydisk boot1 write_boot1 boot2 write_boot2 kernel write_kernel hexdump launchqemu clean
 mydisk: 
 	dd if=/dev/zero of=$(bootdisk) bs=$(blocksize) count=$(disksize) status=noxfer
 
@@ -51,7 +51,7 @@ launchqemu:
 	qemu-system-i386 -fda $(bootdisk)
 	
 clean:
-	rm -f *.bin $(bootdisk) *~
-	rm -f *.bin $(boot1) *~
-	rm -f *.bin $(boot1) *~
-	rm -f *.bin $(kernel) *~
+	rm -f $(bootdisk)
+	rm -f $(boot1).bin
+	rm -f $(boot2).bin 
+	rm -f $(kernel).bin
