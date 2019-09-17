@@ -5,6 +5,7 @@ jmp inicio
 MSG1:	db 'Carregando estruturas para o kernel...        ', 0
 MSG2:	db 'Inicializando o modo protegido...             ', 0
 MSG3:	db 'Carregando o kernel na memoria...             ', 0
+MSG4:   db 'Internalizando raiva pelo projeto...          ', 0
 OK:		db 'OK!', 0
 KERNEL:	db 'Operacao concluida! Inicializando o kernel...', 0
 
@@ -38,6 +39,9 @@ inicio:
 	call imprime_msg
 	
 	mov SI, MSG3
+	call imprime_msg
+	
+	mov SI, MSG4
 	jmp call_kernel		; tenta carregar o kernel na memória
 	
 ; -------------------- SUB-ROTINAS --------------------
@@ -68,6 +72,8 @@ ret
 
 minimumer_delay
 	mov AH, 86h
+	mov CX, 0h
+	mov DX, 0h
 	int 15h
 ret
 
@@ -75,12 +81,12 @@ imprime_msg:
 	add BX, 160 - 98
 	call print_string
 	
-	call delay
+	;call delay
 	
 	mov SI, OK
 	call print_string
 	
-	call delay
+	;call delay
 	
 ret
 
@@ -93,7 +99,7 @@ print_string:
 	inc BX
 	inc SI
 
-	call minimumer_delay
+	;call minimumer_delay
 	
 	cmp byte[SI], 0
 	jne print_string

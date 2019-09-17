@@ -3,9 +3,6 @@ org 0x7E00
 ;jmp 0x0000:main
 jmp main
 
-start db "Start",0
-instruct db "Instructions",0
-marker db ">",0
 rodada db 0
 choice db 0
 winner db 0
@@ -19,14 +16,112 @@ cards_player_one times 3 db 3
 cards_player_two times 3 db 3
 old_cards_player_one times 3 db 3
 old_cards_player_two times 3 db 3
+instruct db "INSTRUCTIONS", 0
+start db "START", 0
+story db "STORY", 0
+instline1 db "A/S/D = Pedra/Papel/Tesoura"
 
 logo db 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 14, 0, 14, 0, 0, 0, 0, 0, 0, 14, 14, 14, 11, 11, 11, 14, 14, 5, 0, 0, 0, 0, 0, 0, 14, 5, 14, 11, 11, 11, 14, 5, 14, 0, 14, 0, 0, 0, 0, 14, 14, 14, 11, 14, 11, 5, 11, 5, 11, 5, 0, 0, 0, 0, 5, 5, 5, 11, 5, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 14, 14, 14, 11, 14, 11, 0, 0, 11, 11, 11, 11, 14, 14, 14, 14, 5, 14, 11, 5, 5, 0, 0, 11, 14, 14, 14, 5, 14, 5, 14, 14, 14, 5, 14, 10, 14, 14, 14, 14, 5, 14, 14, 14, 5, 5, 5, 5, 10, 10, 10, 5, 14, 5, 14, 14, 14, 5, 5, 10, 0, 10, 10, 0, 0, 0, 14, 14, 5, 5, 5, 5, 10, 10, 10, 0, 0, 0, 0, 0, 0, 5, 10, 5, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-smolrock db 0, 0, 0, 0, 0, 11, 14, 0, 14, 0, 0, 0, 14, 14, 14, 0, 11, 14, 14, 5, 0, 0, 0, 14, 5, 14, 11, 11, 14, 5, 14, 0, 14, 0, 14, 14, 14, 11, 14, 5, 11, 5, 0, 5, 0, 5, 5, 5, 11, 5, 11, 11, 11, 11, 14, 0, 0, 11, 11, 11, 11, 11, 11, 11, 11, 14, 0, 11, 11, 11, 11, 14, 14, 14, 14, 14, 5, 14, 14, 14, 14, 14, 5, 14, 5, 14, 14, 14, 5, 14, 5, 14, 14, 14, 14, 5, 5, 10, 10, 14, 14, 5, 5, 5, 10, 10, 5, 10, 0, 0, 10, 10, 0, 10, 10, 0, 0, 0, 0, 0, 0
+smolrock db 15, 15, 12, 0, 0, 0, 0, 0, 0, 15, 0, 0, 12, 0, 12, 12, 0, 0, 0, 0, 12, 15, 12, 15, 12, 12, 0, 0, 0, 12, 15, 12, 15, 12, 15, 12, 0, 12, 15, 12, 12, 12, 12, 15, 12, 12, 15, 12, 15, 12, 15, 12, 12, 12, 0, 12, 15, 15, 12, 15, 15, 12, 12, 0, 0, 12, 15, 15, 12, 15, 12, 15, 0, 0, 12, 4, 4, 4, 4, 15, 15
 
 smolscissors db 15, 15, 11, 15, 11, 15, 11, 0, 0, 15, 0, 11, 15, 11, 15, 11, 0, 11, 11, 0, 11, 15, 11, 15, 11, 0, 0, 0, 0, 11, 15, 11, 15, 11, 15, 0, 0, 11, 15, 11, 11, 11, 11, 15, 11, 11, 15, 11, 15, 11, 15, 11, 11, 11, 0, 11, 15, 15, 11, 15, 15, 11, 11, 0, 0, 11, 15, 15, 11, 15, 11, 15, 0, 0, 11, 15, 15, 11, 15, 15, 15
 
 smolpaper db 15, 15, 13, 15, 13, 15, 13, 13, 0, 15, 0, 13, 15, 13, 15, 13, 15, 13, 13, 0, 13, 15, 13, 15, 13, 15, 13, 0, 13, 13, 15, 13, 15, 13, 15, 13, 13, 15, 13, 13, 13, 13, 13, 15, 13, 13, 15, 13, 15, 13, 15, 13, 13, 13, 0, 13, 15, 15, 13, 15, 15, 13, 0, 0, 0, 13, 15, 15, 13, 15, 13, 15, 13, 0, 13, 15, 15, 13, 15, 15, 15
+
+victory1 db 15, 15, 0, 0, 4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 15, 0, 5, 4, 0, 4, 4, 4, 4, 4, 0, 0, 4, 0, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5, 5, 5, 4, 0, 0, 4, 4, 4, 4, 4, 0, 0, 0, 0, 5, 0, 0, 4, 4, 0, 4, 14, 4, 14, 4, 0, 0, 0, 0, 5, 5, 5, 4, 4, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 4, 0, 15, 4, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 4, 0, 15, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 4, 0, 4, 12, 12, 4, 12, 12, 4, 5, 5, 0, 0, 4, 12, 4, 4, 4, 15, 12, 12, 12, 12, 4, 0, 0, 0, 0, 4, 12, 4, 12, 4, 15, 15, 15, 12, 12, 4, 5, 5, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 12, 12, 4, 0, 4, 10, 4, 0, 12, 4, 0, 15, 0, 0, 0, 4, 4, 4, 0, 4, 10, 4, 0, 12, 4, 15, 15
+
+drawall db 15, 15, 0, 0, 4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 15, 0, 5, 4, 0, 4, 4, 4, 4, 4, 0, 0, 4, 0, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5, 5, 5, 4, 0, 0, 4, 4, 4, 4, 4, 0, 0, 0, 0, 5, 0, 0, 4, 4, 0, 4, 14, 4, 14, 4, 0, 0, 0, 0, 5, 5, 5, 4, 4, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 4, 0, 15, 4, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 4, 0, 15, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 4, 0, 4, 12, 12, 4, 12, 12, 4, 5, 5, 0, 0, 4, 12, 4, 4, 4, 15, 12, 12, 12, 12, 4, 0, 0, 0, 0, 4, 12, 4, 12, 4, 15, 15, 15, 12, 12, 4, 5, 5, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 12, 12, 4, 0, 4, 10, 4, 0, 12, 4, 0, 15, 0, 0, 0, 4, 4, 4, 0, 4, 10, 4, 0, 12, 4, 15, 15
+
+victory2 db 15, 15, 0, 0, 4, 0, 0, 0, 0, 0, 4, 4, 0, 0, 0, 15, 0, 5, 4, 0, 4, 4, 4, 4, 4, 0, 0, 4, 0, 0, 0, 5, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5, 5, 5, 4, 0, 0, 4, 4, 4, 4, 4, 0, 0, 0, 0, 5, 0, 0, 4, 4, 0, 4, 14, 4, 14, 4, 0, 0, 0, 0, 5, 5, 5, 4, 4, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 4, 0, 15, 4, 0, 0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 4, 0, 15, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 4, 0, 4, 12, 12, 4, 12, 12, 4, 5, 5, 0, 0, 4, 12, 4, 4, 4, 15, 12, 12, 12, 12, 4, 0, 0, 0, 0, 4, 12, 4, 12, 4, 15, 15, 15, 12, 12, 4, 5, 5, 0, 0, 0, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 0, 0, 0, 0, 0, 4, 12, 12, 4, 0, 4, 10, 4, 0, 12, 4, 0, 15, 0, 0, 0, 4, 4, 4, 0, 4, 10, 4, 0, 12, 4, 15, 15
+
+title db 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 14, 14, 11, 0, 14, 14, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 14, 14, 11, 14, 14, 14, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 14, 14, 14, 14, 14, 14, 0, 11, 11, 11, 11, 14, 14, 14, 14, 14, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 14, 14, 14, 14, 14, 14, 11, 11, 11, 11, 11, 14, 14, 14, 14, 5, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 5, 5, 5, 5, 14, 14, 11, 11, 11, 11, 11, 14, 14, 14, 14, 11, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 0, 0, 0, 0, 14, 14, 11, 11, 11, 11, 11, 14, 14, 14, 14, 14, 11, 11, 11, 11, 14, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 0, 0, 0, 11, 14, 14, 11, 11, 11, 11, 11, 14, 14, 5, 14, 14, 14, 11, 11, 11, 14, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 0, 0, 0, 11, 14, 14, 11, 11, 14, 14, 11, 14, 14, 11, 5, 14, 14, 14, 11, 11, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 14, 14, 14, 14, 14, 14, 14, 14, 11, 11, 14, 14, 11, 5, 5, 11, 11, 5, 5, 5, 11, 11, 11, 11, 11, 0, 0, 14, 14, 0, 0, 0, 0, 0, 14, 14, 14, 14, 14, 14, 14, 14, 11, 11, 5, 5, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 0, 14, 14, 0, 0, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 11, 11, 11, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 0, 0, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 5, 5, 5, 14, 14, 11, 14, 14, 0, 0, 0, 0, 0, 11, 11, 11, 14, 14, 14, 14, 14, 14, 14, 11, 5, 5, 14, 14, 14, 5, 5, 11, 14, 14, 11, 11, 5, 14, 14, 5, 5, 5, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 14, 14, 14, 14, 14, 11, 11, 11, 14, 14, 14, 11, 11, 11, 14, 14, 5, 5, 5, 14, 14, 5, 14, 14, 14, 14, 14, 14, 14, 14, 14, 11, 14, 14, 5, 5, 5, 14, 14, 11, 11, 11, 14, 14, 14, 5, 5, 5, 14, 14, 14, 14, 14, 14, 14, 0, 14, 14, 5, 5, 14, 14, 14, 5, 5, 11, 14, 14, 11, 11, 11, 14, 14, 11, 14, 5, 14, 14, 14, 5, 5, 5, 14, 14, 14, 14, 0, 14, 14, 0, 5, 0, 0, 0, 14, 14, 14, 11, 11, 11, 14, 14, 11, 11, 11, 14, 14, 5, 14, 14, 14, 14, 14, 5, 0, 0, 0, 5, 5, 0, 10, 0, 0, 10, 0, 10, 0, 0, 14, 14, 14, 11, 11, 11, 14, 14, 14, 14, 14, 14, 14, 5, 14, 14, 0, 0, 0, 0, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 10, 0, 14, 11, 14, 14, 14, 11, 5, 5, 14, 14, 14, 14, 14, 14, 14, 5, 5, 5, 0, 10, 10, 0, 0, 10, 0, 0, 0, 10, 10, 10, 0, 0, 10, 0, 14, 14, 14, 14, 14, 5, 5, 5, 5, 5, 5, 0, 0, 0, 5, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 0, 10, 0, 0, 10, 0, 14, 14, 14, 14, 14, 5, 5, 0, 0, 0, 0, 0, 10, 0, 0, 10, 10, 0, 0, 10, 10, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 5, 5, 5, 0, 0, 0, 0, 0, 10, 10, 10, 0, 10, 0, 10, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 0, 0, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 10, 0, 0, 0, 0, 10, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 10, 10, 0, 0, 10, 10, 0, 0, 0, 10, 10, 0, 10, 10, 0, 0, 0, 10, 10, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 10, 0, 0, 10, 10, 0, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 10, 10, 0, 0, 0, 0, 10, 0, 0, 10, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 10, 0, 10, 0, 0, 0, 10, 10, 0, 0, 10
+
+printTitle:
+	pusha
+	mov cx, 125
+	mov dx, 55
+	mov ah, 0ch
+	mov bh, 0
+	lodsb
+	tloop:
+		innertloop:
+			int 10h
+			inc dx
+			int 10h
+			dec dx
+			inc cx
+			int 10h
+			inc dx
+			int 10h
+			dec dx
+			inc cx
+			cmp cx, 193
+			je e.innertloop
+			lodsb
+			jmp innertloop
+		e.innertloop:
+		add dx, 2
+		mov cx, 125
+		cmp dx, 117
+		je e.tloop
+		lodsb
+		jmp tloop
+	e.tloop:
+	popa
+ret
+
+printSlot1:
+	pusha
+	mov cx, 123
+	mov dx, 110
+	mov ah, 0ch
+	mov bh, 0
+	lodsb
+	s1loop:
+		inners1loop:
+			int 10h
+			inc cx
+			cmp cx, 132
+			je e.inners1loop
+			lodsb
+			jmp inners1loop
+		e.inners1loop:
+		inc dx
+		mov cx, 123
+		cmp dx, 119
+		je e.s1loop
+		lodsb
+		jmp s1loop
+	e.s1loop:
+	popa
+ret
+
+printSlot2:
+	pusha
+	mov cx, 185
+	mov dx, 110
+	mov ah, 0ch
+	mov bh, 0
+	lodsb
+	s2loop:
+		inners2loop:
+			int 10h
+			inc cx
+			cmp cx, 194
+			je e.inners2loop
+			lodsb
+			jmp inners2loop
+		e.inners2loop:
+		inc dx
+		mov cx, 185
+		cmp dx, 119
+		je e.s2loop
+		lodsb
+		jmp s2loop
+	e.s2loop:
+	popa
+ret
 
 printCard1Image:
 	pusha
@@ -222,7 +317,6 @@ ret
 
 printf:
 	pusha
-	;call video
 	xor dx, dx
 	print_loop:
 		lodsb
@@ -368,7 +462,7 @@ printTela:
 	cmp byte[state], 4
 	je DFinal
 
-	mov dx, 6
+	mov dx, 10
 	call mult_endl
 	jmp end_printTela
 
@@ -379,7 +473,7 @@ printTela:
 		call blank
 		mov si, logo
 		call printCard1Image
-		mov dx, 4
+		mov dx, 8
 		call mult_endl
 		pusha
 			mov ah, 0ch
@@ -432,7 +526,7 @@ printTela:
 		popa
 		call printCard2Image
 		call endl
-		mov dx, 4
+		mov dx, 8
 		call mult_endl
 		pusha
 			mov ah, 0ch
@@ -509,19 +603,65 @@ printTela:
 			
 		abc:
 		;  Mostrar cartas
-		mov dx, 4
-		call mult_endl
-		mov dx, 16
+		call endl
+		mov dx, 14
 		call blank
 		mov al, byte[choice_player_one]
 		call putchar
-		mov dx, 6
+		mov dx, 7
 		call blank
 		mov al, byte[choice_player_two]
 		call putchar
+		mov dx, 6
+		call mult_endl
+		mov dx, 17
+		call blank
+		mov al, byte[choice_player_one]
+		call putchar
+		mov dx, 7
+		call blank
+		mov al, byte[choice_player_two]
+		call putchar
+		cmp byte[choice_player_one], 'R'
+		je definerock1
+		cmp byte[choice_player_one], 'S'
+		je definescissors1
+		cmp byte[choice_player_one], 'P'
+		je definepaper1
+
+		definerock1:
+			mov si, smolrock
+		jmp defined1
+		definepaper1:
+			mov si, smolpaper
+		jmp defined1
+		definescissors1:
+			mov si, smolscissors
+		defined1:
+
+		call printSlot1
+
+		cmp byte[choice_player_two], 'R'
+		je definerock2
+		cmp byte[choice_player_two], 'S'
+		je definescissors2
+		cmp byte[choice_player_two], 'P'
+		je definepaper2
+
+		definerock2:
+			mov si, smolrock
+		jmp defined2
+		definepaper2:
+			mov si, smolpaper
+		jmp defined2
+		definescissors2:
+			mov si, smolscissors
+		defined2:
+
+		call printSlot2
 		mov bl, 0
 		call endl
-		;call delay1s
+		call endl
 		call printCard1Square
 		call printCard2Square
 		mov bl, 0
@@ -577,7 +717,7 @@ printTela:
 			mov al, '!'
 			call putchar
 		out:
-		mov dx, 6
+		mov dx, 10
 		call mult_endl
 		;mov dx, 14
 		;call blank
@@ -594,8 +734,6 @@ printTela:
 		jmp end_printTela
 	
 	end_printTela:
-		mov dx, 5
-		call mult_endl
 		mov dx, 13
 		call blank
 		mov si, old_cards_player_one
@@ -910,6 +1048,7 @@ start_game:
 end_game:
 	mov byte[state], 4
 	call printTela
+	mov byte[state], 0
 	mov di, cards_player_one
 	mov byte[di], 3
 	inc di
@@ -922,29 +1061,98 @@ end_game:
 	mov byte[di], 3
 	inc di
 	mov byte[di], 3
+	mov di, old_cards_player_one
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	mov di, old_cards_player_two
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	inc di
+	mov byte[di], 3
+	mov byte[rodada], 0
+	mov byte[pontuation_player_one], 0
+	mov byte[pontuation_player_two], 0
 	mov byte[choice_player_one], 0
 	mov byte[choice_player_two], 0
-	;popa
-;break
-;FAZER RESETAR O JOGO
+	call limpaTela
+	xor cx, cx
+	mov cl, 1
+	jmp menu
 ret
 
-
-
-
-
 main:
-
-	call reset_registers
 	call video
 
 	finite_state_machine:
-
-		reset:
-			xor cx, cx
-			jmp menu
 		menu:
+			call limpaTela
+			cmp cl, 2
+			je instselect
+			jg storyselect
+				mov dx, 16
+				call mult_endl
+				mov dx, 17
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, start
+				call printf
+				mov dx, 15
+				call blank
+				mov si, instruct
+				call printf
+				mov dx, 18
+				call blank
+				mov si, story
+				call printf
+			jmp endmenuprint
+
+			instselect:
+				mov dx, 16
+				call mult_endl
+				mov dx, 18
+				call blank
+				mov si, start
+				call printf
+				mov dx, 14
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, instruct
+				call printf
+				mov dx, 18
+				call blank
+				mov si, story
+				call printf
+			jmp endmenuprint
+
+			storyselect:
+				mov dx, 16
+				call mult_endl
+				mov dx, 18
+				call blank
+				mov si, start
+				call printf
+				mov dx, 15
+				call blank
+				mov si, instruct
+				call printf
+				mov dx, 17
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, story
+				call printf
 			
+			endmenuprint:
+
+			mov si, title
+			call printTitle
+
 			call getchar
 			cmp al, 's'
 			je up_one_choice
@@ -956,7 +1164,7 @@ main:
 			
 			
 			up_one_choice:
-				cmp cl,2
+				cmp cl,3
 				jl up_one
 				jmp menu
 				up_one:
@@ -974,28 +1182,20 @@ main:
 
 			choose:
 				cmp cl, 2
-				je choice_instructions
-				jmp choice_game
-			choice_instructions:
-				mov si, instruct
-				mov di, instruct
-				call printf
-				jmp instructions
-			choice_game:
-				mov si, start
-				mov di , start
-				call printf
-				;call start_game
-				jmp game
-			
-		
-
-		jmp menu
+				je instructions
+				jl game
+				jg historia
+			jmp menu
 		instructions:
 			call getchar
 			cmp al, 13
-			je game
+			je menu
 			jmp instructions
+		historia:
+			call getchar
+			cmp al, 13
+			je menu
+			jmp historia
 		game:
 			call start_game
 	jmp $
