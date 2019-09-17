@@ -1310,7 +1310,6 @@ main:
 				cmp al, 13
 				je menu
 			jmp instructionne
-
 		historia:
 			mov dx, 12
 			call mult_endl
