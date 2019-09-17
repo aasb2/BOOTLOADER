@@ -321,7 +321,6 @@ getchar:
 		xor ax, ax
 		rdtsc
 		mov bx, 3
-		call putchar
 		xor dx, dx
 		div bx
 		;mov dx, 1
@@ -1302,6 +1301,8 @@ main:
 			call endl
 			mov dx, 18
 			call blank
+			mov al, '>'
+			call putchar
 			mov si, BACC
 			call printf
 			instructionne:
@@ -1319,6 +1320,8 @@ main:
 			call endl
 			mov dx, 18
 			call blank
+			mov al, '>'
+			call putchar
 			mov si, BACC
 			call printf
 			tale:
