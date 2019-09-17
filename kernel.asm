@@ -24,9 +24,9 @@ instline2 db "Pedra/Papel/Tesoura", 0
 instline3 db "P1 joga primeiro,", 0
 instline4 db "P2 joga segundo.", 0
 storyline1 db "TBD", 0
-vsAI db "VS AI", 0
-vshooman "VS Human", 0
-BACC db ">BACK"
+vsai db "VS A.I.", 0
+vshooman db "VS Human", 0
+BACC db "BACK"
 
 logo db 0, 0, 0, 0, 0, 0, 0, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 11, 11, 11, 14, 0, 14, 0, 0, 0, 0, 0, 0, 14, 14, 14, 11, 11, 11, 14, 14, 5, 0, 0, 0, 0, 0, 0, 14, 5, 14, 11, 11, 11, 14, 5, 14, 0, 14, 0, 0, 0, 0, 14, 14, 14, 11, 14, 11, 5, 11, 5, 11, 5, 0, 0, 0, 0, 5, 5, 5, 11, 5, 11, 11, 11, 11, 11, 14, 0, 0, 0, 0, 11, 11, 11, 11, 11, 11, 14, 14, 14, 11, 14, 11, 0, 0, 11, 11, 11, 11, 14, 14, 14, 14, 5, 14, 11, 5, 5, 0, 0, 11, 14, 14, 14, 5, 14, 5, 14, 14, 14, 5, 14, 10, 14, 14, 14, 14, 5, 14, 14, 14, 5, 5, 5, 5, 10, 10, 10, 5, 14, 5, 14, 14, 14, 5, 5, 10, 0, 10, 10, 0, 0, 0, 14, 14, 5, 5, 5, 5, 10, 10, 10, 0, 0, 0, 0, 0, 0, 5, 10, 5, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
 
@@ -1203,8 +1203,7 @@ main:
 				jmp menu
 				down_one:
 					dec cx
-					jmp menu 
-			
+					jmp menu
 
 			choose:
 				call limpaTela
@@ -1266,8 +1265,108 @@ main:
 				je menu
 			jmp tale
 		game:
+			mov cl, 1
+			gamemenu:
+				call limpaTela
+				cmp cl, 2
+				je aiselect
+				jg baccselect
+
+				mov dx, 16
+				call mult_endl
+				mov dx, 15
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, vshooman
+				call printf
+				mov dx, 17
+				call blank
+				mov si, vsai
+				call printf
+				mov dx, 18
+				call blank
+				mov si, BACC
+				call printf
+				jmp endgameprint
+
+			aiselect:
+				mov dx, 16
+				call mult_endl
+				mov dx, 16
+				call blank
+				mov si, vshooman
+				call printf
+				mov dx, 16
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, vsai
+				call printf
+				mov dx, 18
+				call blank
+				mov si, BACC
+				call printf
+				jmp endgameprint
+
+			baccselect:
+				mov dx, 16
+				call mult_endl
+				mov dx, 16
+				call blank
+				mov si, vshooman
+				call printf
+				mov dx, 17
+				call blank
+				mov si, vsai
+				call printf
+				mov dx, 17
+				call blank
+				mov al, '>'
+				call putchar
+				mov si, BACC
+				call printf
+			endgameprint:
+
+			mov si, title
+			call printTitle
+
+			miniminimenu:
+				call getchar
+				cmp al, 's'
+				je up_one_choice2
+				cmp al, 'w'
+				je down_one_choice2
+				cmp al, 13
+				je choose2
+			jmp miniminimenu
 			
-			call start_game
+			up_one_choice2:
+				cmp cl, 3
+				jl up_one2
+				jmp gamemenu
+				up_one2:
+					inc cx
+					jmp gamemenu
+
+			down_one_choice2:
+				cmp cl, 1
+				jg down_one2
+				jmp gamemenu
+				down_one2:
+					dec cx
+					jmp gamemenu
+			
+			choose2:
+				call limpaTela
+				cmp cl, 2
+				je start_game ;CONTRA A.I.
+				jl start_game
+				jg backmenu ;Just to be sure
+
+			backmenu:
+				mov cl, 1
+			jmp menu
 	jmp $
 times 63*512-($-$$) db 0
 dw 0xaa55
