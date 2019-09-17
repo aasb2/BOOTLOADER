@@ -43,7 +43,7 @@ inicio:
 ; -------------------- SUB-ROTINAS --------------------
 	
 limpa_tela:
-	mov byte[ES:BX], 33h	; cor = ciano
+	mov byte[ES:BX], 0h	; cor = ciano
 	add BX, 2
 	
 	cmp BX, 4000
@@ -56,7 +56,6 @@ delay:
 	mov CX, 000Ah
 	mov DX, 000Ah		; delay de (20 << 16 + 40)us
 	int 15h
-	
 ret
 
 mini_delay:
@@ -65,6 +64,11 @@ mini_delay:
 	mov DX, 3000h
 	int 15h
 
+ret
+
+minimumer_delay
+	mov AH, 86h
+	int 15h
 ret
 
 imprime_msg:
@@ -85,11 +89,11 @@ print_string:
 	mov byte[ES:BX], DL			; escreve caractere na memória de vídeo
 	inc BX
 	
-	mov byte[ES:BX], 34h		; seleciona o atributo do caractere (fundo = ciano, cor = vermelha)
+	mov byte[ES:BX],2h		; seleciona o atributo do caractere (fundo = ciano, cor = vermelha)
 	inc BX
 	inc SI
-	
-	call mini_delay
+
+	call minimumer_delay
 	
 	cmp byte[SI], 0
 	jne print_string
