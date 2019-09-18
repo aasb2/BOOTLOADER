@@ -74,13 +74,12 @@ printEnding:
 			int 10h
 			inc dx
 			int 10h
-			dec dx
-			dec dx
+			sub dx, 2
 			inc cx
 			cmp cx, 183
 			je e.innereloop
 			lodsb
-			jmp innereloop
+		jmp innereloop
 		e.innereloop:
 		add dx, 3
 		mov cx, 138
@@ -104,12 +103,10 @@ printTitle:
 			int 10h
 			inc dx
 			int 10h
-			dec dx
 			inc cx
 			int 10h
-			inc dx
-			int 10h
 			dec dx
+			int 10h
 			inc cx
 			cmp cx, 193
 			je e.innertloop
@@ -128,23 +125,29 @@ ret
 
 printSlot1:
 	pusha
-	mov cx, 123
-	mov dx, 110
+	mov cx, 119
+	mov dx, 106
 	mov ah, 0ch
 	mov bh, 0
 	lodsb
 	s1loop:
 		inners1loop:
 			int 10h
+			inc dx
+			int 10h
 			inc cx
-			cmp cx, 132
+			int 10h
+			dec dx
+			int 10h
+			inc cx
+			cmp cx, 137
 			je e.inners1loop
 			lodsb
-			jmp inners1loop
+		jmp inners1loop
 		e.inners1loop:
-		inc dx
-		mov cx, 123
-		cmp dx, 119
+		add dx, 2
+		mov cx, 119
+		cmp dx, 124
 		je e.s1loop
 		lodsb
 		jmp s1loop
@@ -154,23 +157,29 @@ ret
 
 printSlot2:
 	pusha
-	mov cx, 185
-	mov dx, 110
+	mov cx, 181
+	mov dx, 106
 	mov ah, 0ch
 	mov bh, 0
 	lodsb
 	s2loop:
 		inners2loop:
 			int 10h
+			inc dx
+			int 10h
 			inc cx
-			cmp cx, 194
+			int 10h
+			dec dx
+			int 10h
+			inc cx
+			cmp cx, 199
 			je e.inners2loop
 			lodsb
 			jmp inners2loop
 		e.inners2loop:
-		inc dx
-		mov cx, 185
-		cmp dx, 119
+		add dx, 2
+		mov cx, 181
+		cmp dx, 124
 		je e.s2loop
 		lodsb
 		jmp s2loop
