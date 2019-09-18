@@ -23,7 +23,7 @@ instline1 db "A/S/D", 0
 instline2 db "Pedra/Papel/Tesoura", 0
 instline3 db "P1 joga primeiro,", 0
 instline4 db "P2 joga segundo.", 0
-storyline1 db "TBD", 0
+storyline1 db "Uma bizarra Plazaventura!", 0
 vsai db "VS A.I.", 0
 vshooman db "VS Human", 0
 PC db 0
@@ -906,7 +906,6 @@ start_game:
 		mov byte[choice_player_two], 'X'
 		call printTela
 		player_one:
-
 			call getchar
 			;mov bx, state
 			mov byte[state], 1
@@ -915,6 +914,12 @@ start_game:
 			cmp al, 's'
 			je player_one_chooses_paper
 			cmp al, 'd'
+			je player_one_chooses_scisors
+			cmp al, 'A'
+			je player_one_chooses_rock
+			cmp al, 'S'
+			je player_one_chooses_paper
+			cmp al, 'D'
 			je player_one_chooses_scisors
 			jmp player_one
 
@@ -982,6 +987,12 @@ start_game:
 			cmp al, 's'
 			je player_two_chooses_paper
 			cmp al, 'd'
+			je player_two_chooses_scisors
+			cmp al, 'A'
+			je player_two_chooses_rock
+			cmp al, 'S'
+			je player_two_chooses_paper
+			cmp al, 'D'
 			je player_two_chooses_scisors
 			jmp player_two
 
@@ -1254,6 +1265,10 @@ main:
 				je up_one_choice
 				cmp al, 'w'
 				je down_one_choice
+				cmp al, 'S'
+				je up_one_choice
+				cmp al, 'W'
+				je down_one_choice
 				cmp al, 13
 				je choose
 			jmp minimenu
@@ -1262,7 +1277,7 @@ main:
 			up_one_choice:
 				cmp cl,3
 				jl up_one
-				jmp menu
+				jmp minimenu
 				up_one:
 					inc cx
 					jmp menu
@@ -1270,7 +1285,7 @@ main:
 			down_one_choice:
 				cmp cl, 1
 				jg down_one
-				jmp menu
+				jmp minimenu
 				down_one:
 					dec cx
 					jmp menu
@@ -1281,19 +1296,13 @@ main:
 				je instructions
 				jl game
 				jg historia
-			jmp menu
 		instructions:
-			mov dx, 12
+			mov dx, 9
 			call mult_endl
 			mov dx, 18
 			call blank
 			mov si, instline1
 			call printf
-			mov dx, 20
-			call blank
-			mov al, '='
-			call putchar
-			call endl
 			mov dx, 11
 			call blank
 			mov si, instline2
@@ -1321,9 +1330,9 @@ main:
 			jmp instructionne
 
 		historia:
-			mov dx, 12
+			mov dx, 10
 			call mult_endl
-			mov dx, 19
+			mov dx, 9
 			call blank
 			mov si, storyline1
 			call printf
@@ -1412,6 +1421,10 @@ main:
 				je up_one_choice2
 				cmp al, 'w'
 				je down_one_choice2
+				cmp al, 'S'
+				je up_one_choice2
+				cmp al, 'W'
+				je down_one_choice2
 				cmp al, 13
 				je choose2
 			jmp miniminimenu
@@ -1419,7 +1432,7 @@ main:
 			up_one_choice2:
 				cmp cl, 3
 				jl up_one2
-				jmp gamemenu
+				jmp miniminimenu
 				up_one2:
 					inc cx
 					jmp gamemenu
@@ -1427,7 +1440,7 @@ main:
 			down_one_choice2:
 				cmp cl, 1
 				jg down_one2
-				jmp gamemenu
+				jmp miniminimenu
 				down_one2:
 					dec cx
 					jmp gamemenu
@@ -1453,7 +1466,6 @@ main:
 				not_ai:
 				cmp cl, 2
 				jl start_game
-				jg backmenu ;Just to be sure
 
 			backmenu:
 				mov cl, 1

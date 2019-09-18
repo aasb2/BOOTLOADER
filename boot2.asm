@@ -8,100 +8,96 @@ MSG3:	db 'Carregar o kernel na memoria...               ', 0
 MSG4:   db 'Internalizando raiva pelo projeto...          ', 0
 MSG5:   db 'Iniciar naruto_run.exe...                     ', 0
 OK:		db 'OK!', 0
-KERNEL:	db 'Operacao concluida! Inicializando o kernel...', 0
+KERNELMSG:	db 'Operacao concluida! Inicializando o kernel...', 0
 
 DRIVE:	db 0
 
 inicio:
 	cli
-	mov AX, 09000h
-	mov SS, AX			; cria uma pilha
-	mov SP, 0FB00h
+	mov ax, 09000h
+	mov ss, ax
+	mov sp, 0FB00h
 	
-	xor AX, AX			; zera DS
-	mov DS, AX
+	xor ax, ax
+	mov ds, ax
 	
-	mov AX, 0B800h		; inicializa ES na memória de vídeo
-	mov ES, AX
+	mov ax, 0B800h
+	mov es, ax
 	sti
 	
-	mov byte[DRIVE], DL
-	mov BX, 01
+	mov byte[DRIVE], dl
+	mov bx, 01
 	
-	call limpa_tela		; limpa a tela com a cor 3 = ciano
+	call limpa_tela
 	call delay
 	
-	mov BX, 160 + 98 + 10
+	mov bx, 160 + 98 + 10
 	
-	mov SI, MSG1
+	mov si, MSG1
 	call imprime_msg
 	
-	mov SI, MSG2		; imprime as mensagens de load
+	mov si, MSG2
 	call imprime_msg
 	
-	mov SI, MSG3
+	mov si, MSG3
 	call imprime_msg
 	
-	mov SI, MSG4
+	mov si, MSG4
 	call imprime_msg
 
-	mov SI, MSG5
-	jmp call_kernel		; tenta carregar o kernel na memória
-	
-; -------------------- SUB-ROTINAS --------------------
+	mov si, MSG5
+	jmp call_kernel
 	
 limpa_tela:
-	mov byte[ES:BX], 0h	; cor = ciano
-	add BX, 2
+	mov byte[ES:BX], 0h
+	add bx, 2
 	
-	cmp BX, 4000
+	cmp bx, 4000
 	jb limpa_tela
 	
 ret
 
 delay:
-	mov AH, 86h
-	mov CX, 000Ah
-	mov DX, 000Ah		; delay de (20 << 16 + 40)us
+	mov ah, 86h
+	mov cx, 000Ah
+	mov dx, 000Ah
 	int 15h
 ret
 
 mini_delay:
-	mov AH, 86h
-	mov CX, 0001h
-	mov DX, 3000h
+	mov ah, 86h
+	mov cx, 0001h
+	mov dx, 3000h
 	int 15h
 
 ret
 
 minimumer_delay
-	mov AH, 86h
-	mov CX, 0h
-	mov DX, 0h
+	mov ah, 86h
+	mov cx, 0h
+	mov dx, 0h
 	int 15h
 ret
 
 imprime_msg:
-	add BX, 160 - 98
+	add bx, 160 - 98
 	call print_string
 	
 	;call delay
 	
-	mov SI, OK
+	mov si, OK
 	call print_string
-	
-	;call delay
 	
 ret
 
 print_string:
-	mov DL, byte[SI]
-	mov byte[ES:BX], DL			; escreve caractere na memória de vídeo
-	inc BX
+	mov dl, byte[si]
+	mov byte[ES:BX], dl
+	inc bx
 	
-	mov byte[ES:BX],0x0a    ;0 de preto, A de verde claro
-	inc BX
-	inc SI
+	mov byte[ES:BX],0x0a
+	inc bx
+	inc si
 
 	call minimumer_delay
 	
@@ -110,40 +106,37 @@ print_string:
 	
 ret
 
-; -------------------- CHAMADA DO KERNEL --------------------
-
 call_kernel:
-	add BX, 160 - 98
+	add bx, 160 - 98
 	call print_string
 	
 	call minimumer_delay
 	
-	mov SI, OK
+	mov si, OK
 	call print_string
 	
 	call delay
 	add BX, 320 - 98
 	
-	mov SI, KERNEL
+	mov si, KERNELMSG
 	call print_string
 	
 	call delay
 	
 	load_hd:
-		mov DI, BX
+		mov di, bx
 		
-		mov AX, 07E0h
-		mov ES, AX		; carrega novo endereço (end. 7E00h)
-		xor BX, BX
+		mov ax, 07E0h
+		mov es, ax
+		xor bx, bx
 		
-		mov AH, 02h		; faz nova leitura do disco
-		mov AL, 10		; vai ler 10 setores
-		mov CH, 00h		; nº da linha = 0
-		mov CL, 03h		; nº do setor = 3
-		mov DH, 00h
-		mov DL, byte[DRIVE]
+		mov ah, 02h
+		mov al, 10
+		mov ch, 00h
+		mov cl, 03h
+		mov dh, 00h
+		mov dl, byte[DRIVE]
 		int 13h
 		
-		jc load_hd		; se leu com sucesso, pula para o endereço do kernel (ES:00)
-	
-	jmp 7E00h
+		jc load_hd
+jmp 7E00h
