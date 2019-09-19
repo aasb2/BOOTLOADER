@@ -6,6 +6,5 @@
 - Filipe Samuel da Silva (fss8)
 
 
-						![Game](titlecard.png)
-
-						![Gam1](game.png)
+![Gam1](game.png)
+![Game](titlecard.png)
